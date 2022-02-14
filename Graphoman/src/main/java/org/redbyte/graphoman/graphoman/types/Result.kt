@@ -48,6 +48,11 @@ sealed class Result<out T> : Serializable {
         else -> defaultValue
     }
 
+    fun getOrNull(): T? = when (this) {
+        is Success -> this.value
+        else -> null
+    }
+
     fun orElse(defaultValue: () -> Result<@UnsafeVariance T>): Result<T> =
         when (this) {
             is Success -> this
