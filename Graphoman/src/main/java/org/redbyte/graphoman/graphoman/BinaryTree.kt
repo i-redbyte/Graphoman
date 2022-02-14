@@ -27,6 +27,15 @@ sealed class BinaryTree<out T : Comparable<@UnsafeVariance T>> {
         }
     }
 
+    fun contains(t: @UnsafeVariance T): Boolean = when (this) {
+        is Empty -> false
+        is Node -> when {
+            t < value -> left.contains(t)
+            t > value -> right.contains(t)
+            else -> value == t
+        }
+    }
+
     companion object {
         operator fun <T : Comparable<T>> invoke(vararg data: T): BinaryTree<T> =
             data.foldRight(Empty) { t: T, tree: BinaryTree<T> -> tree.plus(t) }
