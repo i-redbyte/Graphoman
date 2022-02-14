@@ -1,5 +1,6 @@
 package org.redbyte.graphoman.graphoman.struct.graph.tree
 
+import org.redbyte.graphoman.graphoman.types.Result
 import kotlin.math.max
 
 sealed class BinaryTree<out T : Comparable<@UnsafeVariance T>> {
@@ -7,6 +8,8 @@ sealed class BinaryTree<out T : Comparable<@UnsafeVariance T>> {
     abstract val size: Int
     abstract val height: Int
     abstract fun isEmpty(): Boolean
+    abstract fun max(): Result<T>
+    abstract fun min(): Result<T>
 
     internal object Empty : BinaryTree<Nothing>() {
         override val size: Int = 0
@@ -16,6 +19,10 @@ sealed class BinaryTree<out T : Comparable<@UnsafeVariance T>> {
         override fun isEmpty(): Boolean = true
 
         override fun toString(): String = "E"
+
+        override fun max(): Result<Nothing> = Result.empty()
+
+        override fun min(): Result<Nothing> = Result.empty()
 
     }
 
@@ -32,6 +39,10 @@ sealed class BinaryTree<out T : Comparable<@UnsafeVariance T>> {
         override fun isEmpty(): Boolean = false
 
         override fun toString(): String = "(Node $left $value $right)"
+
+        override fun max(): Result<T> = right.max().orElse { Result(value) }
+
+        override fun min(): Result<T> = left.min().orElse { Result(value) }
     }
 
     operator fun plus(element: @UnsafeVariance T): BinaryTree<T> = when (this) {

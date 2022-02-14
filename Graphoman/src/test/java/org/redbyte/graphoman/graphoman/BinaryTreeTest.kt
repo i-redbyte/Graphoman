@@ -51,4 +51,13 @@ class BinaryTreeTest {
         assertEquals(3, testTree.height)
     }
 
+    @Test
+    fun `get min value`() {
+        assertEquals(0, testTree.min().getOrElse(Int.MAX_VALUE))
+    }
+
+    @Test
+    fun `get max value`() {
+        assertEquals(85, testTree.max().getOrNull())
+    }
 }
