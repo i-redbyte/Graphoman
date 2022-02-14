@@ -39,4 +39,15 @@ class BinaryTreeTest {
         assertFalse(testTree.contains(20))
         assertFalse(testTree.contains(40))
     }
+
+    @Test
+    fun `count element in three`() {
+        assertEquals(8, testTree.size())
+    }
+
+    @Test
+    fun `height three`() {
+        assertEquals(4, testTree.height())
+    }
+
 }
