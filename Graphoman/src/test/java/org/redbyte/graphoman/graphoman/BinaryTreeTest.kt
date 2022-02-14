@@ -42,12 +42,12 @@ class BinaryTreeTest {
 
     @Test
     fun `count element in three`() {
-        assertEquals(8, testTree.size())
+        assertEquals(8, testTree.size)
     }
 
     @Test
     fun `height three`() {
-        assertEquals(3, testTree.height())
+        assertEquals(3, testTree.height)
     }
 
 }

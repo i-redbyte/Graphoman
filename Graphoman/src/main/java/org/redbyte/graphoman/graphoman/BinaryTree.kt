@@ -3,19 +3,19 @@ package org.redbyte.graphoman.graphoman
 import kotlin.math.max
 
 sealed class BinaryTree<out T : Comparable<@UnsafeVariance T>> {
+
+    abstract val size: Int
+    abstract val height: Int
     abstract fun isEmpty(): Boolean
-    abstract fun size(): Int
-    abstract fun height(): Int
 
     internal object Empty : BinaryTree<Nothing>() {
+        override val size: Int = 0
+
+        override val height: Int = -1
 
         override fun isEmpty(): Boolean = true
 
         override fun toString(): String = "E"
-
-        override fun size(): Int = 0
-
-        override fun height(): Int = -1
 
     }
 
@@ -25,13 +25,13 @@ sealed class BinaryTree<out T : Comparable<@UnsafeVariance T>> {
         internal val right: BinaryTree<T>
     ) : BinaryTree<T>() {
 
+        override val size: Int = 1 + left.size + right.size
+
+        override val height: Int = 1 + max(left.height, right.height)
+
         override fun isEmpty(): Boolean = false
 
         override fun toString(): String = "(Node $left $value $right)"
-
-        override fun size(): Int = 1 + left.size() + right.size()
-
-        override fun height(): Int = 1 + max(left.height(), right.height())
     }
 
     operator fun plus(element: @UnsafeVariance T): BinaryTree<T> = when (this) {
