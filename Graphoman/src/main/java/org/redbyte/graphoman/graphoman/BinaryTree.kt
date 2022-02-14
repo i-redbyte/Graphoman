@@ -15,7 +15,7 @@ sealed class BinaryTree<out T : Comparable<@UnsafeVariance T>> {
         internal val right: BinaryTree<T>
     ) : BinaryTree<T>() {
         override fun isEmpty(): Boolean = false
-        override fun toString(): String = "Node(left = $left value = $value right = $right)"
+        override fun toString(): String = "(Node $left $value $right)"
     }
 
     operator fun plus(element: @UnsafeVariance T): BinaryTree<T> = when (this) {
@@ -23,11 +23,12 @@ sealed class BinaryTree<out T : Comparable<@UnsafeVariance T>> {
         is Node -> when {
             element < this.value -> Node(this.value, left + element, right)
             element > this.value -> Node(this.value, left, right + element)
-            else -> this//Node(element, this.left, this.right)
+            else -> this
         }
     }
 
     companion object {
-        operator fun <T : Comparable<T>> invoke(): BinaryTree<T> = Empty
+        operator fun <T : Comparable<T>> invoke(vararg data: T): BinaryTree<T> =
+            data.foldRight(Empty) { t: T, tree: BinaryTree<T> -> tree.plus(t) }
     }
 }
