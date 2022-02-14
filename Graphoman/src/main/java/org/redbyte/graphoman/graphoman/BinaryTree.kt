@@ -15,7 +15,7 @@ sealed class BinaryTree<out T : Comparable<@UnsafeVariance T>> {
 
         override fun size(): Int = 0
 
-        override fun height(): Int = 0
+        override fun height(): Int = -1
 
     }
 

@@ -47,7 +47,7 @@ class BinaryTreeTest {
 
     @Test
     fun `height three`() {
-        assertEquals(4, testTree.height())
+        assertEquals(3, testTree.height())
     }
 
 }
