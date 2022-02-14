@@ -1,4 +1,4 @@
-package org.redbyte.graphoman.graphoman
+package org.redbyte.graphoman.graphoman.struct.graph.tree
 
 import kotlin.math.max
 

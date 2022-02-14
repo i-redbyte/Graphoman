@@ -2,6 +2,7 @@ package org.redbyte.graphoman.graphoman
 
 import org.junit.Assert.*
 import org.junit.Test
+import org.redbyte.graphoman.graphoman.struct.graph.tree.BinaryTree
 
 class BinaryTreeTest {
     var testTree = BinaryTree(50)
