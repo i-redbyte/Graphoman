@@ -71,6 +71,8 @@ sealed class Result<out T> : Serializable {
         return@flatMap if (predicate(it)) this else failure(message)
     }
 
+    fun <T, B> lift(f: (T) -> B): (Result<T>) -> Result<B> = { it.map(f) }
+
     companion object {
 
         operator fun <T> invoke(a: T? = null): Result<T> = when (a) {
