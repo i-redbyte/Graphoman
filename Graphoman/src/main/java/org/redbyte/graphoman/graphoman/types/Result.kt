@@ -78,13 +78,18 @@ sealed class Result<out T> : Serializable {
             else -> Success(a)
         }
 
+        operator fun <T> invoke(t: T? = null, message: String): Result<T> = when (t) {
+            null -> Failure(NullPointerException(message))
+            else -> Success(t)
+        }
+
         operator fun <T> invoke(): Result<T> = Empty
 
-        fun <T> failure(message: String): Result<T> =
-            Failure(IllegalStateException(message))
 
-        fun <T> failure(exception: RuntimeException): Result<T> =
-            Failure(exception)
+        fun <T> failure(message: String): Result<T> = Failure(IllegalStateException(message))
+        fun <T> failure(exception: RuntimeException): Result<T> = Failure(exception)
+        fun <T> empty(): Result<T> = Empty
+
     }
 
 }
