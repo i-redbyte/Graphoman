@@ -60,4 +60,29 @@ class BinaryTreeTest {
     fun `get max value`() {
         assertEquals(85, testTree.max().getOrNull())
     }
+
+    @Test
+    fun `remove value from tree (right)`() {
+        println("tree1 =$testTree")
+        testTree = testTree.remove(85)
+        assertEquals(7, testTree.size)
+        assertEquals(
+            "(Node (Node (Node (Node E 0 E) 15 (Node E 25 E)) 45 E) 50 (Node E 65 (Node E 75 E)))",
+            testTree.toString()
+        )
+        println("tree2 =$testTree")
+    }
+
+    @Test
+    fun `remove value from tree (left)`() {
+        println("tree1 =$testTree")
+        testTree = testTree.remove(0)
+        assertEquals(7, testTree.size)
+        assertEquals(
+            "(Node (Node (Node E 15 (Node E 25 E)) 45 E) 50 (Node E 65 (Node E 75 (Node E 85 E))))",
+            testTree.toString()
+        )
+        println("tree2 =$testTree")
+    }
+
 }

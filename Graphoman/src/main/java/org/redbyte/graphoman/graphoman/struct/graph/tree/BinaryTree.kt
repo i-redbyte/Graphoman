@@ -63,6 +63,26 @@ sealed class BinaryTree<out T : Comparable<@UnsafeVariance T>> {
         }
     }
 
+    fun removeTree(tree: BinaryTree<@UnsafeVariance T>): BinaryTree<T> = when (this) {
+        Empty -> tree
+        is Node -> when (tree) {
+            Empty -> this
+            is Node -> when {
+                tree.value < value -> Node(value, left.removeTree(tree), right)
+                else -> Node(value, left, right.removeTree(tree))
+            }
+        }
+    }
+
+    fun remove(t: @UnsafeVariance T): BinaryTree<T> = when (this) {
+        Empty -> this
+        is Node -> when {
+            t < value -> Node(value, left.remove(t), right)
+            t > value -> Node(value, left, right.remove(t))
+            else -> left.removeTree(right)
+        }
+    }
+
     companion object {
         operator fun <T : Comparable<T>> invoke(vararg data: T): BinaryTree<T> =
             data.foldRight(Empty) { t: T, tree: BinaryTree<T> -> tree.plus(t) }
