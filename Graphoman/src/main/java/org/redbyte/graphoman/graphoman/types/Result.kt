@@ -76,8 +76,6 @@ sealed class Result<out T> : Serializable {
         return@flatMap if (predicate(it)) this else failure(message)
     }
 
-    fun <T, B> lift(f: (T) -> B): (Result<T>) -> Result<B> = { it.map(f) }
-
     companion object {
 
         operator fun <T> invoke(a: T? = null): Result<T> = when (a) {
@@ -96,7 +94,7 @@ sealed class Result<out T> : Serializable {
         fun <T> failure(message: String): Result<T> = Failure(IllegalStateException(message))
         fun <T> failure(exception: RuntimeException): Result<T> = Failure(exception)
         fun <T> empty(): Result<T> = Empty
-
+        fun <T, B> lift(f: (T) -> B): (Result<T>) -> Result<B> = { it.map(f) }
     }
 
 }
