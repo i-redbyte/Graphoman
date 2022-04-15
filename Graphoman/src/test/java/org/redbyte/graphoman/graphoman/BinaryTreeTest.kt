@@ -6,8 +6,16 @@ import org.redbyte.graphoman.graphoman.struct.graph.tree.BinaryTree
 
 class BinaryTreeTest {
     var testTree = BinaryTree(50)
+    var treeA = BinaryTree(3)
+    var treeB = BinaryTree(3)
 
     init {
+        treeA += 3
+        treeA += 2
+        treeA += 1
+        treeB += 5
+        treeB += 4
+        treeB += 6
         testTree += 45
         testTree += 65
         testTree += 15
@@ -28,9 +36,6 @@ class BinaryTreeTest {
 
     @Test
     fun `contains element`() {
-        println()
-        println(testTree)
-        println()
         assertTrue(testTree.contains(45))
         assertTrue(testTree.contains(85))
         assertTrue(testTree.contains(0))
@@ -63,26 +68,32 @@ class BinaryTreeTest {
 
     @Test
     fun `remove value from tree (right)`() {
-        println("tree1 =$testTree")
         testTree = testTree.remove(85)
         assertEquals(7, testTree.size)
         assertEquals(
             "(Node (Node (Node (Node E 0 E) 15 (Node E 25 E)) 45 E) 50 (Node E 65 (Node E 75 E)))",
             testTree.toString()
         )
-        println("tree2 =$testTree")
     }
 
     @Test
     fun `remove value from tree (left)`() {
-        println("tree1 =$testTree")
         testTree = testTree.remove(0)
         assertEquals(7, testTree.size)
         assertEquals(
             "(Node (Node (Node E 15 (Node E 25 E)) 45 E) 50 (Node E 65 (Node E 75 (Node E 85 E))))",
             testTree.toString()
         )
-        println("tree2 =$testTree")
     }
 
+    @Test
+    fun `merge trees`() {
+        val merge = treeA.merge(treeB)
+        assertEquals(merge.contains(6), true)
+        assertEquals(merge.contains(1), true)
+        assertEquals(merge.contains(88), false)
+        assertEquals(treeA.merge(treeB).toString(), treeB.merge(treeA).toString())
+        assertEquals(BinaryTree.Empty.merge(BinaryTree.Empty), BinaryTree.Empty)
+        assertEquals(treeB.toString(), treeB.merge(BinaryTree.Empty).toString())
+    }
 }

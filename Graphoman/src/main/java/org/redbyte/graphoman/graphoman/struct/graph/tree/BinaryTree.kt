@@ -10,6 +10,7 @@ sealed class BinaryTree<out T : Comparable<@UnsafeVariance T>> {
     abstract fun isEmpty(): Boolean
     abstract fun max(): Result<T>
     abstract fun min(): Result<T>
+    abstract fun merge(tree: BinaryTree<@UnsafeVariance T>): BinaryTree<T>
 
     internal object Empty : BinaryTree<Nothing>() {
         override val size: Int = 0
@@ -24,6 +25,7 @@ sealed class BinaryTree<out T : Comparable<@UnsafeVariance T>> {
 
         override fun min(): Result<Nothing> = Result.empty()
 
+        override fun merge(tree: BinaryTree<Nothing>): BinaryTree<Nothing> = tree
     }
 
     internal class Node<T : Comparable<T>>(
@@ -43,6 +45,19 @@ sealed class BinaryTree<out T : Comparable<@UnsafeVariance T>> {
         override fun max(): Result<T> = right.max().orElse { Result(value) }
 
         override fun min(): Result<T> = left.min().orElse { Result(value) }
+
+        override fun merge(tree: BinaryTree<@UnsafeVariance T>): BinaryTree<T> = when (tree) {
+            Empty -> this
+            is Node -> when {
+                tree.value > this.value ->
+                    Node(value, left, right.merge(Node(tree.value, Empty, tree.right)))
+                        .merge(tree.left)
+                tree.value < this.value ->
+                    Node(value, left.merge(Node(tree.value, tree.left, Empty)), right)
+                        .merge(tree.right)
+                else -> Node(tree.value, left.merge(tree.left), right.merge(tree.right))
+            }
+        }
     }
 
     operator fun plus(element: @UnsafeVariance T): BinaryTree<T> = when (this) {
@@ -74,11 +89,11 @@ sealed class BinaryTree<out T : Comparable<@UnsafeVariance T>> {
         }
     }
 
-    fun remove(t: @UnsafeVariance T): BinaryTree<T> = when (this) {
+    fun remove(tree: @UnsafeVariance T): BinaryTree<T> = when (this) {
         Empty -> this
         is Node -> when {
-            t < value -> Node(value, left.remove(t), right)
-            t > value -> Node(value, left, right.remove(t))
+            tree < value -> Node(value, left.remove(tree), right)
+            tree > value -> Node(value, left, right.remove(tree))
             else -> left.removeTree(right)
         }
     }
