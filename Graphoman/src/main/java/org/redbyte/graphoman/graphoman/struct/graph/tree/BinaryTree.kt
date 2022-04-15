@@ -11,6 +11,11 @@ sealed class BinaryTree<out T : Comparable<@UnsafeVariance T>> {
     abstract fun max(): Result<T>
     abstract fun min(): Result<T>
     abstract fun merge(tree: BinaryTree<@UnsafeVariance T>): BinaryTree<T>
+    abstract fun <B> foldLeft(
+        identity: B,
+        f: (B) -> (T) -> B,
+        g: (B) -> (B) -> B
+    ): B
 
     internal object Empty : BinaryTree<Nothing>() {
         override val size: Int = 0
@@ -26,6 +31,8 @@ sealed class BinaryTree<out T : Comparable<@UnsafeVariance T>> {
         override fun min(): Result<Nothing> = Result.empty()
 
         override fun merge(tree: BinaryTree<Nothing>): BinaryTree<Nothing> = tree
+
+        override fun <B> foldLeft(identity: B, f: (B) -> (Nothing) -> B, g: (B) -> (B) -> B): B = identity
     }
 
     internal class Node<T : Comparable<T>>(
@@ -58,6 +65,10 @@ sealed class BinaryTree<out T : Comparable<@UnsafeVariance T>> {
                 else -> Node(tree.value, left.merge(tree.left), right.merge(tree.right))
             }
         }
+
+        override fun <B> foldLeft(identity: B, f: (B) -> (T) -> B, g: (B) -> (B) -> B): B =
+            g(right.foldLeft(identity, f, g))(f(left.foldLeft(identity, f, g))
+                (this.value))
     }
 
     operator fun plus(element: @UnsafeVariance T): BinaryTree<T> = when (this) {
