@@ -96,4 +96,28 @@ class BinaryTreeTest {
         assertEquals(BinaryTree.Empty.merge(BinaryTree.Empty), BinaryTree.Empty)
         assertEquals(treeB.toString(), treeB.merge(BinaryTree.Empty).toString())
     }
+
+    @Test
+    fun `left fold tree`() {
+        val result = BinaryTree(4, 2, 6, 1, 3, 5, 7)
+            .foldLeft(
+                listOf(),
+                { list: List<Int> ->
+                    { value: Int ->
+                        list + value
+                    }
+                })
+            { x -> { y -> x + y } }.reversed()
+        assertEquals(result, listOf(7, 5, 3, 1, 2, 4, 6))
+        assertNotEquals(result, listOf(1, 2, 3, 4, 5, 6, 7))
+        val emptyResult = BinaryTree.Empty.foldLeft(listOf(),
+            { list: List<Int> ->
+                { value: Int ->
+                    list + value
+                }
+            })
+        { x -> { y -> x + y } }
+        assertNotEquals(emptyResult, listOf(1, 2, 3, 4, 5, 6, 7))
+        assertEquals(emptyResult, emptyList<Int>())
+    }
 }
