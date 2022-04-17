@@ -12,21 +12,23 @@ sealed class BinaryTree<out T : Comparable<@UnsafeVariance T>> {
     abstract fun min(): Result<T>
     abstract fun merge(tree: BinaryTree<@UnsafeVariance T>): BinaryTree<T>
 
-    abstract fun <B> foldLeft(
-        identity: B,
-        f: (B) -> (T) -> B,
-        g: (B) -> (B) -> B
-    ): B
+    abstract fun <A> foldLeft(
+        identity: A,
+        f: (A) -> (T) -> A,
+        g: (A) -> (A) -> A
+    ): A
 
-    abstract fun <B> foldRight(
-        identity: B,
-        f: (T) -> (B) -> B,
-        g: (B) -> (B) -> B
-    ): B
+    abstract fun <A> foldRight(
+        identity: A,
+        f: (T) -> (A) -> A,
+        g: (A) -> (A) -> A
+    ): A
 
-    abstract fun <B> foldInOrder(identity: B, f: (B) -> (T) -> (B) -> B): B
+    abstract fun <A> foldInOrder(identity: A, f: (A) -> (T) -> (A) -> A): A
 
-    abstract fun <B> foldPreOrder(identity: B, f: (T) -> (B) -> (B) -> B): B
+    abstract fun <A> foldPreOrder(identity: A, f: (T) -> (A) -> (A) -> A): A
+
+    abstract fun <A> foldPostOrder(identity: A, f: (A) -> (A) -> (T) -> A): A
 
     internal object Empty : BinaryTree<Nothing>() {
         override val size: Int = 0
@@ -43,13 +45,15 @@ sealed class BinaryTree<out T : Comparable<@UnsafeVariance T>> {
 
         override fun merge(tree: BinaryTree<Nothing>): BinaryTree<Nothing> = tree
 
-        override fun <B> foldLeft(identity: B, f: (B) -> (Nothing) -> B, g: (B) -> (B) -> B): B = identity
+        override fun <A> foldLeft(identity: A, f: (A) -> (Nothing) -> A, g: (A) -> (A) -> A): A = identity
 
-        override fun <B> foldRight(identity: B, f: (Nothing) -> (B) -> B, g: (B) -> (B) -> B): B = identity
+        override fun <A> foldRight(identity: A, f: (Nothing) -> (A) -> A, g: (A) -> (A) -> A): A = identity
 
-        override fun <B> foldInOrder(identity: B, f: (B) -> (Nothing) -> (B) -> B): B = identity
+        override fun <A> foldInOrder(identity: A, f: (A) -> (Nothing) -> (A) -> A): A = identity
 
-        override fun <B> foldPreOrder(identity: B, f: (Nothing) -> (B) -> (B) -> B): B = identity
+        override fun <A> foldPreOrder(identity: A, f: (Nothing) -> (A) -> (A) -> A): A = identity
+
+        override fun <A> foldPostOrder(identity: A, f: (A) -> (A) -> (Nothing) -> A): A = identity
 
     }
 
@@ -84,21 +88,23 @@ sealed class BinaryTree<out T : Comparable<@UnsafeVariance T>> {
             }
         }
 
-        override fun <B> foldLeft(identity: B, f: (B) -> (T) -> B, g: (B) -> (B) -> B): B =
+        override fun <A> foldLeft(identity: A, f: (A) -> (T) -> A, g: (A) -> (A) -> A): A =
             g(right.foldLeft(identity, f, g))(
                 f(left.foldLeft(identity, f, g))
                     (this.value)
             )
 
-        override fun <B> foldRight(identity: B, f: (T) -> (B) -> B, g: (B) -> (B) -> B): B =
+        override fun <A> foldRight(identity: A, f: (T) -> (A) -> A, g: (A) -> (A) -> A): A =
             g(f(this.value)(left.foldRight(identity, f, g)))(right.foldRight(identity, f, g))
 
-        override fun <B> foldInOrder(identity: B, f: (B) -> (T) -> (B) -> B): B =
+        override fun <A> foldInOrder(identity: A, f: (A) -> (T) -> (A) -> A): A =
             f(left.foldInOrder(identity, f))(value)(right.foldInOrder(identity, f))
 
-        override fun <B> foldPreOrder(identity: B, f: (T) -> (B) -> (B) -> B): B =
+        override fun <A> foldPreOrder(identity: A, f: (T) -> (A) -> (A) -> A): A =
             f(value)(left.foldPreOrder(identity, f))(right.foldPreOrder(identity, f))
 
+        override fun <A> foldPostOrder(identity: A, f: (A) -> (A) -> (T) -> A): A =
+            f(left.foldPostOrder(identity, f))(right.foldPostOrder(identity, f))(value)
     }
 
     operator fun plus(element: @UnsafeVariance T): BinaryTree<T> = when (this) {
