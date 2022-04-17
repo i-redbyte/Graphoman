@@ -5,6 +5,7 @@ import org.junit.Test
 import org.redbyte.graphoman.graphoman.struct.List
 
 class ListTest {
+
     @Test
     fun `add value to head list`() {
         var list = List(1)
@@ -13,5 +14,10 @@ class ListTest {
         assertEquals("[2, 1, NIL]", list.toString())
         list = list.addToHead(1917)
         assertEquals("[1917, 2, 1, NIL]", list.toString())
+    }
+
+    @Test
+    fun `list fold left`() {
+        // TODO: Red_byte 18.04.2022
     }
 }
