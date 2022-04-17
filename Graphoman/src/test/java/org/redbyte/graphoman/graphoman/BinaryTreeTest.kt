@@ -26,6 +26,21 @@ class BinaryTreeTest {
     }
 
     @Test
+    fun `print tree`() {
+        BinaryTree(-1, 2, 1).printTree()
+        println("==========")
+        BinaryTree(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1).printTree()
+        println("==========")
+        BinaryTree(6, 5, 3, 2, 1).printTree()
+        println("==========")
+        BinaryTree(100, 50, 70, 40).printTree()
+        println("==========")
+        BinaryTree("C++", "Java", "C", "Kotlin", "Go", "Assembler", "Rust", "Python", "Haskell").printTree()
+        println("==========")
+        testTree.printTree(3)
+    }
+
+    @Test
     fun `add element`() {
         var tree = BinaryTree(2)
         assertEquals("(Node E 2 E)", tree.toString())

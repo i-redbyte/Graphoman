@@ -11,6 +11,7 @@ sealed class BinaryTree<out T : Comparable<@UnsafeVariance T>> {
     abstract fun max(): Result<T>
     abstract fun min(): Result<T>
     abstract fun merge(tree: BinaryTree<@UnsafeVariance T>): BinaryTree<T>
+
     abstract fun <B> foldLeft(
         identity: B,
         f: (B) -> (T) -> B,
@@ -41,6 +42,7 @@ sealed class BinaryTree<out T : Comparable<@UnsafeVariance T>> {
         override fun <B> foldLeft(identity: B, f: (B) -> (Nothing) -> B, g: (B) -> (B) -> B): B = identity
 
         override fun <B> foldRight(identity: B, f: (Nothing) -> (B) -> B, g: (B) -> (B) -> B): B = identity
+
     }
 
     internal class Node<T : Comparable<T>>(
@@ -113,11 +115,22 @@ sealed class BinaryTree<out T : Comparable<@UnsafeVariance T>> {
         }
     }
 
-    fun remove(tree: @UnsafeVariance T): BinaryTree<T> = when (this) {
+    fun printTree(level: Int = 0) {
+        fun foo(tree: BinaryTree<@UnsafeVariance T>, level: Int) {
+            if (tree !is Empty && tree is Node) {
+                foo(tree.left, level + 1)
+                println(" ".repeat(4 * level) + "-> ${tree.value}")
+                foo(tree.right, level + 1)
+            }
+        }
+        foo(this, level)
+    }
+
+    fun remove(element: @UnsafeVariance T): BinaryTree<T> = when (this) {
         Empty -> this
         is Node -> when {
-            tree < value -> Node(value, left.remove(tree), right)
-            tree > value -> Node(value, left, right.remove(tree))
+            element < this.value -> Node(this.value, left.remove(element), right)
+            element > this.value -> Node(this.value, left, right.remove(element))
             else -> left.removeTree(right)
         }
     }
