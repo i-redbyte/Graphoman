@@ -27,6 +27,8 @@ class BinaryTreeTest {
 
     @Test
     fun `print tree`() {
+        BinaryTree(4, 2, 6, 1, 3, 5, 7).printTree()
+        println("==========")
         BinaryTree(-1, 2, 1).printTree()
         println("==========")
         BinaryTree(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1).printTree()
@@ -155,7 +157,7 @@ class BinaryTreeTest {
                 }
             })
         { x -> { y -> x + y } }
-        assertNotEquals(emptyResult, listOf(1, 2, 3, 4, 5, 6, 7))
-        assertEquals(emptyResult, emptyList<Int>())
+        assertNotEquals(listOf(1, 2, 3, 4, 5, 6, 7), emptyResult)
+        assertEquals(emptyList<Int>(), emptyResult)
     }
 }

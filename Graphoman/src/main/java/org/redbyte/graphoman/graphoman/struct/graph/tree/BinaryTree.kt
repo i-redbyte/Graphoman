@@ -24,6 +24,8 @@ sealed class BinaryTree<out T : Comparable<@UnsafeVariance T>> {
         g: (B) -> (B) -> B
     ): B
 
+    abstract fun <B> foldInOrder(identity: B, f: (B) -> (T) -> (B) -> B): B
+
     internal object Empty : BinaryTree<Nothing>() {
         override val size: Int = 0
 
@@ -42,6 +44,8 @@ sealed class BinaryTree<out T : Comparable<@UnsafeVariance T>> {
         override fun <B> foldLeft(identity: B, f: (B) -> (Nothing) -> B, g: (B) -> (B) -> B): B = identity
 
         override fun <B> foldRight(identity: B, f: (Nothing) -> (B) -> B, g: (B) -> (B) -> B): B = identity
+
+        override fun <B> foldInOrder(identity: B, f: (B) -> (Nothing) -> (B) -> B): B = identity
 
     }
 
@@ -84,6 +88,9 @@ sealed class BinaryTree<out T : Comparable<@UnsafeVariance T>> {
 
         override fun <B> foldRight(identity: B, f: (T) -> (B) -> B, g: (B) -> (B) -> B): B =
             g(f(this.value)(left.foldRight(identity, f, g)))(right.foldRight(identity, f, g))
+
+        override fun <B> foldInOrder(identity: B, f: (B) -> (T) -> (B) -> B): B =
+            f(left.foldInOrder(identity, f))(value)(right.foldInOrder(identity, f))
     }
 
     operator fun plus(element: @UnsafeVariance T): BinaryTree<T> = when (this) {
